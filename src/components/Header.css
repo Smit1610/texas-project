@@ -1,0 +1,9 @@
+.header {
+    background-color: white;
+
+    height: 5vh;
+
+    position: sticky;
+    top: 0; /* Stick to the top of the container */
+    z-index: 1; /* Ensure the sticky element is above other content */
+}
