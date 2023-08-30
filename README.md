@@ -1,9 +1,9 @@
 Technology needed for this project:
 
-1. Git
+1. Git:
 Open a terminal and run 'git --version' to see if Git is already installed on your machine. If not, download from https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
 
-2. Node.js
+2. Node.js:
 Check if this is already installed with 'node --version'. If not, install from https://nodejs.org/en/download
 
 
