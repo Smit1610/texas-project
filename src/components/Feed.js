@@ -1,11 +1,13 @@
 import React from "react";
 import './Feed.css';
 import Post from './Post';
+import CreatePost from "./CreatePost";
 
 function Feed() {
     return (
         <div className="feed">
             <div className="postColumn">
+                <CreatePost />
                 <Post
                     title="Hi buddy"
                     author="Charlie"
