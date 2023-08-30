@@ -1,12 +1,12 @@
 import React from "react";
 import './Post.css';
 
-function Post() {
+function Post({ title, author, content }) {
     return (
         <div className="post">
-            <h2 className="post-title">Post title</h2>
-            <p className="post-author">Username</p>
-            <p className="post-content">Hello everyone, this is my post!</p>
+            <h2 className="post-title">{title}</h2>
+            <p className="post-author">{author}</p>
+            <p className="post-content">{content}</p>
         </div>
     );
 }
