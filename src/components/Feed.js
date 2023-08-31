@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import './Feed.css';
 import Post from './Post';
 import CreatePost from "./CreatePost";
+import firestore from '../firebase';
 
 function Feed() {
+    
     return (
         <div className="feed">
             <div className="postColumn">
