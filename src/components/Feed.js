@@ -29,10 +29,15 @@ function Feed() {
         fetchPosts();
     }, []);
 
+    const handlePostCreated = (postId) => {
+        // could fetch new post by id, but for now will just fetch all posts
+        fetchPosts();
+    }
+
     return (
         <div className="feed">
             <div className="postColumn">
-                <CreatePost />
+                <CreatePost onPostCreated={handlePostCreated} />
                 
                 {posts.map(post => (
                     <Post 
