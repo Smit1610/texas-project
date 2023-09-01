@@ -1,13 +1,28 @@
 import React, { useState } from "react";
 import './CreatePost.css';
+import { collection, addDoc } from "firebase/firestore";
+import db from "../firebase";
 
 function CreatePost() {
 
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
 
+    const createPost = async (e) => {
+        try {
+            const docRef = await addDoc(collection(db, "posts"), {
+                author: "Anonymous",
+                content: content,
+                title: title
+            });
+        } catch (e) {
+            console.error("Error creating post: ", e);
+        }
+    }
+
     const handleSubmit = () => {
         // Call function to post to database
+        createPost();
 
         // Clear the input fields
         setTitle('');
