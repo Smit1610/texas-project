@@ -3,13 +3,16 @@ import './Feed.css';
 import Post from './Post';
 import CreatePost from "./CreatePost";
 import db from '../firebase';
-import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import { collection, getDocs, orderBy, query, startAfter, limit } from "firebase/firestore";
 
 function Feed() {
     const [posts, setPosts] = useState([]);
 
     const fetchPosts = async () => {
-        const postsQuery = query(collection(db, 'posts'), orderBy('timestamp', 'desc'));
+        const postsQuery = query(
+            collection(db, 'posts'), 
+            orderBy('timestamp', 'desc'),
+            limit(5));
 
         try {
             const querySnapshot = await getDocs(postsQuery);
