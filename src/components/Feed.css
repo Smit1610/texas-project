@@ -6,4 +6,7 @@
 
 .postColumn {
     width: 40%;
+    
+    max-height: 95vh;
+    overflow: auto;
 }

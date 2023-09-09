@@ -59,34 +59,34 @@ function Feed() {
     }, []);
 
     useEffect(() => {
-        const observer = new IntersectionObserver(
-            (entries) => {
-                const [entry] = entries;
-                if (entry.isIntersecting && !loading && lastDoc) {
+        const handleScroll = () => {
+            console.log('scroll');
+            const container = containerRef.current;
+            if (container) {
+                const scrollHeight = container.scrollHeight;
+                const scrollTop = container.scrollTop;
+                const clientHeight = container.clientHeight;
+
+                if (scrollHeight - scrollTop <= clientHeight + 100 && !loading && lastDoc) {
                     fetchPosts();
                 }
-            },
-            {
-                root: null,
-                rootMargin: "0px", 
-                threshold: 0.5 // adjust threshold as needed
             }
-        );
+        };
 
         if (containerRef.current) {
-            observer.observe(containerRef.current);
+            containerRef.current.addEventListener("scroll", handleScroll);
         }
 
         return () => {
             if (containerRef.current) {
-                observer.unobserve(containerRef.current);
+                containerRef.current.removeEventListener("scroll", handleScroll);
             }
         };
     }, [loading, lastDoc])
 
     return (
         <div className="feed">
-            <div className="postColumn" ref={containerRef}>
+            <div className="postColumn" ref={containerRef} >
                 <CreatePost />
                 
                 {posts.map(post => (
