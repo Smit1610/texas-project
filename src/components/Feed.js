@@ -61,12 +61,16 @@ function Feed() {
     const handleScroll = () => {
         const container = document.querySelector(".postColumn");
         if (container) {
-            const scrollHeight = container.scrollHeight;
-            const scrollTop = container.scrollTop;
-            const clientHeight = container.clientHeight;
+             // Calculate the distance between the current scroll position and the bottom of the page
+            const scrollY = window.scrollY; // Current scroll position
+            const windowHeight = window.innerHeight; // Height of the visible window
+            const documentHeight = document.documentElement.scrollHeight; // Total height of the document
 
-            if (scrollHeight - scrollTop <= clientHeight + 50 && !loading && lastDoc) {
-                console.log('fetching posts');
+            // Calculate the threshold for considering the user at the bottom
+            const scrollThreshold = documentHeight - windowHeight;
+
+            if (scrollY >= scrollThreshold) {
+                console.log('scrolled to bottom');
                 fetchPosts();
             }
         }
