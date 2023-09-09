@@ -57,36 +57,32 @@ function Feed() {
     useEffect(() => {
         fetchPosts();
     }, []);
+   
+    const handleScroll = () => {
+        const container = document.querySelector(".postColumn");
+        if (container) {
+            const scrollHeight = container.scrollHeight;
+            const scrollTop = container.scrollTop;
+            const clientHeight = container.clientHeight;
+
+            if (scrollHeight - scrollTop <= clientHeight + 50 && !loading && lastDoc) {
+                console.log('fetching posts');
+                fetchPosts();
+            }
+        }
+    };
 
     useEffect(() => {
-        const handleScroll = () => {
-            console.log('scroll');
-            const container = containerRef.current;
-            if (container) {
-                const scrollHeight = container.scrollHeight;
-                const scrollTop = container.scrollTop;
-                const clientHeight = container.clientHeight;
-
-                if (scrollHeight - scrollTop <= clientHeight + 100 && !loading && lastDoc) {
-                    fetchPosts();
-                }
-            }
-        };
-
-        if (containerRef.current) {
-            containerRef.current.addEventListener("scroll", handleScroll);
-        }
+        window.addEventListener("scroll", handleScroll);
 
         return () => {
-            if (containerRef.current) {
-                containerRef.current.removeEventListener("scroll", handleScroll);
-            }
-        };
-    }, [loading, lastDoc])
+            window.removeEventListener("scroll", handleScroll);
+        }
+    }, [loading, lastDoc]);
 
     return (
         <div className="feed">
-            <div className="postColumn" ref={containerRef} >
+            <div className="postColumn">
                 <CreatePost />
                 
                 {posts.map(post => (
