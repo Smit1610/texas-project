@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import './Feed.css';
 import Post from './Post';
 import CreatePost from "./CreatePost";
@@ -7,12 +7,27 @@ import { collection, getDocs, orderBy, query, startAfter, limit } from "firebase
 
 function Feed() {
     const [posts, setPosts] = useState([]);
+    const [lastDoc, setLastDoc] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const containerRef = useRef(null);
 
     const fetchPosts = async () => {
-        const postsQuery = query(
+        setLoading(true);
+
+        var postsQuery = query(
             collection(db, 'posts'), 
             orderBy('timestamp', 'desc'),
-            limit(5));
+            limit(5)
+        );
+
+        if (lastDoc) {
+            postsQuery = query(
+                collection(db, 'posts'), 
+                orderBy('timestamp', 'desc'),
+                limit(5),
+                startAfter(lastDoc)
+            );
+        }
 
         try {
             const querySnapshot = await getDocs(postsQuery);
@@ -22,9 +37,20 @@ function Feed() {
             id: doc.id,
             }));
 
-            setPosts(newData);
+            // Create a new array to temporarily store the posts
+            const tempPosts = [...posts, ...newData];
+
+            // Set the temporary posts array as the new posts state
+            setPosts(tempPosts);
+
+            // Update the lastDoc cursor
+            if (querySnapshot.docs.length > 0) {
+                setLastDoc(querySnapshot.docs[querySnapshot.docs.length - 1]);
+            }
         } catch (error) {
             console.error('Error fetching posts:', error);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -32,9 +58,35 @@ function Feed() {
         fetchPosts();
     }, []);
 
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                const [entry] = entries;
+                if (entry.isIntersecting && !loading && lastDoc) {
+                    fetchPosts();
+                }
+            },
+            {
+                root: null,
+                rootMargin: "0px", 
+                threshold: 0.5 // adjust threshold as needed
+            }
+        );
+
+        if (containerRef.current) {
+            observer.observe(containerRef.current);
+        }
+
+        return () => {
+            if (containerRef.current) {
+                observer.unobserve(containerRef.current);
+            }
+        };
+    }, [loading, lastDoc])
+
     return (
         <div className="feed">
-            <div className="postColumn">
+            <div className="postColumn" ref={containerRef}>
                 <CreatePost />
                 
                 {posts.map(post => (
@@ -44,6 +96,8 @@ function Feed() {
                         title={post.title}
                     />
                 ))}
+
+                {loading && <p>Loading...</p>}
             </div>
         </div>
     );
