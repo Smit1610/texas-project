@@ -1,13 +1,31 @@
 import React, { useState } from "react";
 import './CreatePost.css';
+import { collection, addDoc, Timestamp } from "firebase/firestore";
+import db from "../firebase";
 
-function CreatePost() {
+function CreatePost({ onPostCreated }) {
 
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
 
+    const createPost = async (e) => {
+        try {
+            const docRef = await addDoc(collection(db, "posts"), {
+                author: "Anonymous",
+                content: content,
+                timestamp: Timestamp.now(),
+                title: title
+            });
+            // Call the callback function to notify Feed of the new post
+            onPostCreated(docRef.id);
+        } catch (e) {
+            console.error("Error creating post: ", e);
+        }
+    }
+
     const handleSubmit = () => {
         // Call function to post to database
+        createPost();
 
         // Clear the input fields
         setTitle('');
