@@ -3,7 +3,7 @@ import './Feed.css';
 import Post from './Post';
 import CreatePost from "./CreatePost";
 import db from '../firebase';
-import { collection, getDocs, orderBy, query, startAfter, limit } from "firebase/firestore";
+import { collection, getDocs, getDoc, doc, orderBy, query, startAfter, limit } from "firebase/firestore";
 
 function Feed() {
     const [posts, setPosts] = useState([]);
@@ -85,8 +85,23 @@ function Feed() {
     }, [loading, lastDoc]);
 
     const handlePostCreated = (postId) => {
-        // could fetch new post by id, but for now will just fetch all posts
-        fetchPosts();
+
+        const fetchNewPost = async () => {
+            try {
+                const docRef = await getDoc(doc(db, 'posts', postId));
+                if (docRef.exists()) {
+                    const newPost = {
+                        ...docRef.data(),
+                        id: docRef.id
+                    };
+                    setPosts((prevPosts) => [newPost, ...prevPosts]);
+                }
+            } catch (error) {
+                console.error('Error fetching new post:', error);
+            }
+        };
+
+        fetchNewPost();
     }
 
     return (
