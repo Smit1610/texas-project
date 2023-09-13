@@ -1,0 +1,39 @@
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-box {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+
+    width: 400px; /* Increase the width to make it wider */
+    max-width: 80%; /* Limit the maximum width to ensure responsiveness */
+    height: auto; /* Allow the height to adjust based on content */
+    min-height: 400px; /* Set a minimum height for the box */
+
+}
+
+.login-input {
+    font-size: 1rem;
+    text-align: left;
+
+    margin-bottom: 10px;
+}
+
+.input-box {
+}
+
+button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
