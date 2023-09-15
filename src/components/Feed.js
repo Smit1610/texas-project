@@ -4,8 +4,11 @@ import Post from './Post';
 import CreatePost from "./CreatePost";
 import db from '../firebase';
 import { collection, getDocs, getDoc, doc, orderBy, query, startAfter, limit } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from '../firebase';
 
 function Feed() {
+    const [user, setUser] = useState(null);
     const [posts, setPosts] = useState([]);
     const [lastDoc, setLastDoc] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -57,6 +60,25 @@ function Feed() {
     useEffect(() => {
         fetchPosts();
     }, []);
+
+    useEffect(()=>{
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+              // User is signed in, see docs for a list of available properties
+              // https://firebase.google.com/docs/reference/js/firebase.User
+              const uid = user.uid;
+              console.log("uid", uid)
+              // change user state
+              setUser(user);
+              console.log(user);
+            } else {
+              // User is signed out
+              console.log("user is logged out")
+              // change user state to reflect log out
+              setUser(null);
+            }
+          });
+    }, [])
    
     const handleScroll = () => {
         const container = document.querySelector(".postColumn");
