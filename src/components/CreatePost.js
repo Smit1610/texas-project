@@ -2,16 +2,19 @@ import React, { useState } from "react";
 import './CreatePost.css';
 import { collection, addDoc, Timestamp } from "firebase/firestore";
 import db from "../firebase";
+import { useUser } from "../contexts/UserContext";
 
 function CreatePost({ onPostCreated }) {
 
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
 
+    const user = useUser();
+
     const createPost = async (e) => {
         try {
             const docRef = await addDoc(collection(db, "posts"), {
-                author: "Anonymous",
+                author: user.email,
                 content: content,
                 timestamp: Timestamp.now(),
                 title: title
