@@ -6,12 +6,14 @@ import db from '../firebase';
 import { collection, getDocs, getDoc, doc, orderBy, query, startAfter, limit } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from '../firebase';
+import { useUser } from '../contexts/UserContext';
 
 function Feed() {
     const [posts, setPosts] = useState([]);
     const [lastDoc, setLastDoc] = useState(null);
     const [loading, setLoading] = useState(false);
     const containerRef = useRef(null);
+    const user = useUser();
 
     const fetchPosts = async () => {
         setLoading(true);
@@ -109,7 +111,13 @@ function Feed() {
     return (
         <div className="feed">
             <div className="postColumn">
-                <CreatePost onPostCreated={handlePostCreated} />
+                
+                {user ? (
+                    <CreatePost onPostCreated={handlePostCreated} />
+                ) : (
+                    <p>Login to post.</p>
+                )}
+                
                 
                 {posts.map(post => (
                     <Post 
