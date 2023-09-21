@@ -1,15 +1,15 @@
 import React from "react";
 import './Header.css';
-import PersonIcon from '@mui/icons-material/Person';
 import RedditIcon from '@mui/icons-material/Reddit';
 import SearchBar from './SearchBar';
+import LoginLogoutButton from "./LoginLogoutButton";
 
 function Header() {
     return (
         <div className="header">
             <RedditIcon />
             <SearchBar />
-            <PersonIcon />
+            <LoginLogoutButton />
         </div>
     );
 }
